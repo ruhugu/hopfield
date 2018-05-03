@@ -42,6 +42,9 @@ class Hopfield(isingmodel.IsingCoupling):
             shape = tuple((shape,))
 
         nnodes = np.prod(shape)
+        
+        # Initialize list of leanrt patterns
+        self.patterns = list()
 
         # Create empty network
         network = networks.Network(nnodes, weighted=True)
@@ -49,6 +52,13 @@ class Hopfield(isingmodel.IsingCoupling):
         # Initialize Ising lattice
         isingmodel.IsingCoupling.__init__(
                 self, nnodes, network=network, shape=shape, seed=seed)
+
+    @property
+    def npatterns(self):
+        """Number of learnt patterns.
+
+        """
+        return len(self.patterns)
 
 
     def learn_pattern_Hebb(self, pattern):
@@ -78,7 +88,9 @@ class Hopfield(isingmodel.IsingCoupling):
                 [self.network.adjmatrix, adjmatrix_change], axis=0,
                 weights=[self.npatterns, 1])
 
-        self.npatterns += 1
 
         # Update neighbour lists
         self.update_neighbours()
+
+        # Store the pattern in the patterns list
+        self.patterns.append(pattern)

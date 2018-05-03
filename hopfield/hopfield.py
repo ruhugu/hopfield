@@ -107,7 +107,7 @@ class Hopfield(isingmodel.IsingCoupling):
                 array is given, it will be flattened.
 
         """
-        return (2.*pattern.flatten() - 1.)*self.spins/self.nspins
+        return np.sum((2.*pattern.flatten() - 1.)*self.spins)/self.nspins
 
 
 

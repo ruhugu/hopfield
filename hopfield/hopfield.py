@@ -19,16 +19,13 @@ class Hopfield(isingmodel.IsingCoupling):
     https://en.wikipedia.org/wiki/Hopfield_network
 
     """
-    def __init__(self, nnodes, shape=None, seed=None):
+    def __init__(self, shape, seed=None):
         """Init method.
 
         Parameters
         ----------
-            nnodes : int
-                Number of nodes in the network.
-
             shape : int tuple
-                Tuple with the shape of the network. It must satisfy
+                Shape of the network (e.g. (2,3) or 2). It must satisfy
                 np.prod(shape) = nnodes. This parameter needed to plot
                 the network. If None, a 1D network (shape = (nnodes, ))
                 is assumed. 
@@ -38,16 +35,18 @@ class Hopfield(isingmodel.IsingCoupling):
                 network evolution.
 
         """
-        # Store parameters
-        self.nnodes = nnodes
+        # Cast shape to tuple
+        try: 
+            shape = tuple(shape)
+        except TypeError:
+            shape = tuple((shape,))
 
-        # Initialize the number of learnt patterns to zero
-        self.npatterns = 0
+        nnodes = np.prod(shape)
 
         # Create empty network
-        network = networks.Network(self.nnodes, weighted=True)
+        network = networks.Network(nnodes, weighted=True)
 
-        # Initialize Ising lattice.
+        # Initialize Ising lattice
         isingmodel.IsingCoupling.__init__(
                 self, nnodes, network=network, shape=shape, seed=seed)
 
@@ -63,7 +62,7 @@ class Hopfield(isingmodel.IsingCoupling):
                 associated with +1 and False with -1.
 
         """
-        if pattern.size != self.nnodes:
+        if pattern.size != self.nspins:
             # TODO: this could be written in a clearer way
             ValueError("The pattern size does not match the network one.")
 

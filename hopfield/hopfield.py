@@ -82,14 +82,13 @@ class Hopfield(isingmodel.IsingCoupling):
         # Convert the bool array to an array with +-1
         pattern_pm = 2*pattern_flat.astype(bool) - 1
 
-        # Update adjacency matrix to learn the pattern
+        # Update adjacency matrix according to Hebb's rule 
         adjmatrix_change = np.outer(pattern_pm, pattern_pm).astype(float)
         self.network.adjmatrix = np.average(
                 [self.network.adjmatrix, adjmatrix_change], axis=0,
                 weights=[self.npatterns, 1])
 
-
-        # Update neighbour lists
+        # Update neighbour lists (isingmodel.Ising method)
         self.update_neighbours()
 
         # Store the pattern in the patterns list

@@ -93,3 +93,22 @@ class Hopfield(isingmodel.IsingCoupling):
 
         # Store the pattern in the patterns list
         self.patterns.append(pattern)
+
+
+
+    def pattern_overlap(self, pattern):
+        """Return overlap of the lattice with a given pattern.
+
+        Parameters
+        ----------
+            pattern : bool array
+                1D array with the pattern to be learned. Its size must
+                be the same as the number of nodes. If N-dimensional 
+                array is given, it will be flattened.
+
+        """
+        return (2.*pattern.flatten() - 1.)*self.spins/self.nspins
+
+
+
+

@@ -57,17 +57,20 @@ class Hopfield(isingmodel.IsingCoupling):
         Parameters
         ----------
             pattern : bool array
-                1D array with the pattern to be learned. Its size must
-                be the same as the number of nodes. True elements are 
-                associated with +1 and False with -1.
+                Array with the pattern to be learned. It must have the
+                the same shape as the network. True elements are 
+                associated with +1 and False with -1. If N-dimensional 
+                array is given, it will be flattened.
 
         """
-        if pattern.size != self.nspins:
+        if pattern.shape != self.shape:
             # TODO: this could be written in a clearer way
-            ValueError("The pattern size does not match the network one.")
+            ValueError("The pattern shape does not match the network one.")
+
+        pattern_flat = pattern.flatten()
 
         # Convert the bool array to an array with +-1
-        pattern_pm = 2*pattern.astype(bool) - 1
+        pattern_pm = 2*pattern_flat.astype(bool) - 1
 
         # Update adjacency matrix to learn the pattern
         adjmatrix_change = np.outer(pattern_pm, pattern_pm).astype(float)

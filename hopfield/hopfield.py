@@ -2,6 +2,7 @@ import sys
 import os 
 
 import numpy as np
+from PIL import Image
 
 sys.path.insert(0, os.path.abspath(
         os.path.join(os.path.dirname(__file__), '../networks')))
@@ -95,7 +96,6 @@ class Hopfield(isingmodel.IsingCoupling):
         self.patterns.append(pattern)
 
 
-
     def pattern_overlap(self, pattern):
         """Return overlap of the lattice with a given pattern.
 
@@ -110,5 +110,22 @@ class Hopfield(isingmodel.IsingCoupling):
         return np.sum((2.*pattern.flatten() - 1.)*self.spins)/self.nspins
 
 
+def image2array(filename, shape=None):
+    """Read image file into a bool array.
 
+    Parameters
+    ----------
+        filename : string 
+            Name of the image file.
 
+        size : tuple
+            If given, the image is resized to the shape
+
+    """
+    # Open the image and change it to black and white
+    im = Image.open(filename).convert('1', dither=Image.NONE)
+
+    im = im.resize(shape, Image.ANTIALIAS)
+    pattern = np.array(im)
+    
+    return pattern
